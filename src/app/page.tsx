@@ -1,7 +1,11 @@
 import { Suspense } from "react";
+import { connection } from "next/server";
 import CatalogApp from "@/components/CatalogApp";
 import { getLaptops } from "@/actions/laptops";
 import { PRICE_MAX } from "@/data/products";
+
+// Catalog reads the database at request time.
+export const instant = false;
 
 function CatalogFallback() {
   return (
@@ -15,6 +19,7 @@ function CatalogFallback() {
 }
 
 async function HomeCatalog() {
+  await connection();
   const result = await getLaptops({
     brand: "All",
     category: "All",
