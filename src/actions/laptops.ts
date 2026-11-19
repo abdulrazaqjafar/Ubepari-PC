@@ -22,6 +22,7 @@ import type {
   Product,
   StockStatus,
 } from "@/types/product";
+import { filterSampleLaptops, isDatabaseConfigured } from "@/data/sample-laptops";
 
 export type ActionResult<T> =
   | { ok: true; data: T }
@@ -35,6 +36,12 @@ export async function getLaptops(
   try {
     const page = Math.max(1, filters.page ?? 1);
     const pageSize = Math.min(50, Math.max(1, filters.pageSize ?? DEFAULT_PAGE_SIZE));
+
+    // No database configured yet: serve the labelled sample catalog instead.
+    if (!isDatabaseConfigured()) {
+      return { ok: true, data: filterSampleLaptops(filters, page, pageSize) };
+    }
+
     const where: Prisma.LaptopWhereInput = {};
 
     if (filters.search?.trim()) {

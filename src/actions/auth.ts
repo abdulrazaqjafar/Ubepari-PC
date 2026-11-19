@@ -2,6 +2,10 @@
 
 import { AuthError } from "next-auth";
 import { signIn, signOut } from "@/auth";
+import {
+  ADMIN_NOT_CONFIGURED_MESSAGE,
+  isAdminConfigured,
+} from "@/lib/setup-status";
 
 export type LoginResult = { ok: true } | { ok: false; error: string };
 
@@ -9,6 +13,9 @@ export async function loginAction(
   email: string,
   password: string
 ): Promise<LoginResult> {
+  if (!isAdminConfigured()) {
+    return { ok: false, error: ADMIN_NOT_CONFIGURED_MESSAGE };
+  }
   try {
     const result = await signIn("credentials", {
       email: email.trim().toLowerCase(),
