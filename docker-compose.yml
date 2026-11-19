@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: ubepari-pc-db
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ubepari
+      POSTGRES_PASSWORD: ubepari
+      POSTGRES_DB: ubepari_pc
+    volumes:
+      - ubepari_pgdata:/var/lib/postgresql/data
+
+volumes:
+  ubepari_pgdata:

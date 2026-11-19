@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Brand {
+  HP
+  Dell
+  Lenovo
+  Apple
+  Asus
+  Acer
+}
+
+enum Category {
+  Gaming
+  CodingHeavyWork
+  OfficeBusiness
+  Budget
+}
+
+enum StockStatus {
+  IN_STOCK
+  LIMITED_STOCK
+  SOLD_OUT
+  PRE_ORDER
+}
+
+enum Condition {
+  BrandNew
+  PreOwned
+}
+
+enum Role {
+  SUPER_ADMIN
+  OWNER
+  SALES_CLERK
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         Role     @default(SALES_CLERK)
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([role])
+  @@index([email])
+}
+
+model Laptop {
+  id          String      @id @default(cuid())
+  name        String
+  brand       Brand
+  category    Category
+  price       Int
+  cpu         String
+  ram         String
+  storage     String
+  gpu         String?
+  image       String
+  images      String[]    @default([])
+  stock       StockStatus @default(IN_STOCK)
+  condition   Condition   @default(PreOwned)
+  description String?
+  viewCount   Int         @default(0)
+  clickCount  Int         @default(0)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([brand])
+  @@index([category])
+  @@index([price])
+  @@index([stock])
+  @@index([createdAt])
+}
