@@ -1,8 +1,22 @@
+import { Suspense } from "react";
+import { connection } from "next/server";
 import CatalogApp from "@/components/CatalogApp";
 import { getLaptops } from "@/actions/laptops";
 import { PRICE_MAX } from "@/data/products";
 
-export default async function Home() {
+export default function Home() {
+  return (
+    <Suspense fallback={<CatalogApp />}>
+      <LaptopCatalog />
+    </Suspense>
+  );
+}
+
+async function LaptopCatalog() {
+  // Laptop data comes from the database, so read it per request rather than
+  // at build time (when no database connection is available).
+  await connection();
+
   const result = await getLaptops({
     brand: "All",
     category: "All",
