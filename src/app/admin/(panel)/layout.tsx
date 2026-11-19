@@ -3,6 +3,9 @@ import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import AdminShell from "@/components/admin/AdminShell";
 
+// Admin routes always need auth/session cookies — allow request-time rendering.
+export const instant = false;
+
 export default function AdminPanelLayout({
   children,
 }: {
